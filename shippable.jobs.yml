@@ -1,0 +1,32 @@
+jobs:
+  - name: deploy-ecs-lb_runCI
+    type: runCI
+    flags:
+      - deploy-ecs-lb
+    steps:
+      - OUT: deploy-ecs-lb-image
+
+  - name: deploy-ecs-lb-manifest
+    type: manifest
+    flags:
+      - deploy-ecs-lb
+    steps:
+     - IN: deploy-ecs-lb-image
+     - IN: deploy-ecs-lb-docker-options
+     - IN: deploy-ecs-lb-params
+     - IN: deploy-ecs-lb-replicas
+
+  - name: deploy-ecs-lb-deploy
+    type: deploy
+    flags:
+      - deploy-ecs-lb
+    steps:
+      - IN: deploy-ecs-lb-manifest
+      - IN: deploy-ecs-lb-ecs-cluster
+      - IN: deploy-ecs-lb-elb
+        applyTo:
+          - manifest: deploy-ecs-lb-manifest
+            image: deploy-ecs-lb-image
+            port: 80
+      - TASK: managed
+        deployMethod: replace
