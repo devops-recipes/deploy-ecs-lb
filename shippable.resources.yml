@@ -51,7 +51,7 @@ resources:
     flags:
       - deploy-ecs-lb
     version:
-      count: 1
+      count: 3
 
   - name: deploy-ecs-lb-ecs-cluster
     type: cluster
