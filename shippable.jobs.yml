@@ -23,7 +23,7 @@ jobs:
     steps:
       - IN: deploy-ecs-lb-manifest
       - IN: deploy-ecs-lb-ecs-cluster
-      - IN: deploy-ecs-lb-elb
+      - IN: deploy-ecs-lb-alb
         applyTo:
           - manifest: deploy-ecs-lb-manifest
             image: deploy-ecs-lb-image

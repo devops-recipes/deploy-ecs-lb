@@ -32,7 +32,7 @@ resources:
     flags:
       - deploy-ecs-lb
     pointer:
-      sourceName: deploy-ecs-alb
+      sourceName: arn:aws:elasticloadbalancing:us-east-1:679404489841:targetgroup/ecs-deploy-alb-tgtgrp/394643319fd6a729
       method: application
       role: role-for-ecs-lb
 
