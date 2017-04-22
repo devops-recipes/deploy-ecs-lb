@@ -16,7 +16,7 @@ resources:
     version:
       memory: 100
       portMappings:
-        - 80:80
+        - 0:80
 
   - name: deploy-ecs-lb-elb
     type: loadBalancer
