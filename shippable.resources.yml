@@ -25,6 +25,7 @@ resources:
     pointer:
       sourceName: deploy-ecs-elb
       method: classic
+      role: role-for-ecs-lb
 
   - name: deploy-ecs-lb-alb
     type: loadBalancer
@@ -33,6 +34,7 @@ resources:
     pointer:
       sourceName: deploy-ecs-alb
       method: application
+      role: role-for-ecs-lb
 
 
   - name: deploy-ecs-lb-params
