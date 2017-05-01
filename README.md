@@ -20,7 +20,7 @@ and istanbul. It also does a docker build once CI posses and then pushes the ima
 ## CI Reports on Shippable
 
 ### CI Integration View
-![CI Integration View](https://github.com/devops-recipes/deploy-ecs-lb/blob/master/public/resources/images/integration-creation.jpg)
+![CI Integration View](https://github.com/devops-recipes/deploy-ecs-lb/blob/master/public/resources/images/integration-creation.png)
 
 ### CI Console Output
 ![CI Console Output](https://github.com/devops-recipes/deploy-ecs-lb/blob/master/public/resources/images/console.jpg)
