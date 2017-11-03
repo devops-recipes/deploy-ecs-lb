@@ -18,6 +18,7 @@ jobs:
 
   - name: deploy-ecs-lb-deploy
     type: deploy
+    method: upgrade
     flags:
       - deploy-ecs-lb
     steps:
@@ -29,5 +30,3 @@ jobs:
           - manifest: deploy-ecs-lb-manifest
             image: deploy-ecs-lb-image
             port: 80
-      - TASK: managed
-        deployMethod: upgrade
