@@ -45,3 +45,101 @@ integrations:
   hub:
     - integrationName: dr-aws-keys
       type: amazonKeys
+
+resources:
+  - name: deploy-ecs-lb-image
+    type: image
+    flags:
+      - deploy-ecs-lb
+    integration: dr-aws-keys
+    pointer:
+      sourceName: "679404489841.dkr.ecr.us-east-1.amazonaws.com/deploy-ecs-lb"
+    seed:
+      versionName: "latest"
+
+  - name: deploy-ecs-lb-docker-options
+    type: dockerOptions
+    flags:
+      - deploy-ecs-lb
+    version:
+      memory: 100
+      portMappings:
+        - 0:80
+
+  - name: deploy-ecs-lb-elb
+    type: loadBalancer
+    flags:
+      - deploy-ecs-lb
+    pointer:
+      sourceName: deploy-ecs-elb
+      method: classic
+      role: role-for-ecs-lb
+
+  - name: deploy-ecs-lb-alb
+    type: loadBalancer
+    flags:
+      - deploy-ecs-lb
+    pointer:
+      sourceName: arn:aws:elasticloadbalancing:us-east-1:679404489841:targetgroup/ecs-deploy-alb-tgtgrp/394643319fd6a729
+      method: application
+      role: role-for-ecs-lb
+
+
+  - name: deploy-ecs-lb-params
+    type: params
+    flags:
+      - deploy-ecs-lb
+    version:
+      params:
+        PORT: 80
+        ENVIRONMENT: "lb_test"
+
+  - name: deploy-ecs-lb-replicas
+    type: replicas
+    flags:
+      - deploy-ecs-lb
+    version:
+      count: 3
+
+  - name: deploy-ecs-lb-ecs-cluster
+    type: cluster
+    flags:
+      - deploy-ecs-lb
+    integration: dr-aws-keys
+    pointer:
+      sourceName : "deploy-ecs-basic" #name of the cluster to which we are deploying
+      region: "us-east-1"
+
+
+jobs:
+  - name: deploy-ecs-lb_runCI
+    type: runCI
+    flags:
+      - deploy-ecs-lb
+    steps:
+      - OUT: deploy-ecs-lb-image
+
+  - name: deploy-ecs-lb-manifest
+    type: manifest
+    flags:
+      - deploy-ecs-lb
+    steps:
+     - IN: deploy-ecs-lb-image
+     - IN: deploy-ecs-lb-docker-options
+     - IN: deploy-ecs-lb-params
+     - IN: deploy-ecs-lb-replicas
+
+  - name: deploy-ecs-lb-deploy
+    type: deploy
+    method: upgrade
+    flags:
+      - deploy-ecs-lb
+    steps:
+      - IN: deploy-ecs-lb-replicas
+      - IN: deploy-ecs-lb-manifest
+      - IN: deploy-ecs-lb-ecs-cluster
+      - IN: deploy-ecs-lb-alb
+        applyTo:
+          - manifest: deploy-ecs-lb-manifest
+            image: deploy-ecs-lb-image
+            port: 80
